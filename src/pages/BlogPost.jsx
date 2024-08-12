@@ -31,6 +31,7 @@ const BlogPost = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState(blogPosts[id]);
   const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!post) {
     return <div className="container mx-auto px-4 py-8">Post not found</div>;
@@ -42,17 +43,28 @@ const BlogPost = () => {
     navigate('/');
   };
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim()) {
-      const updatedPost = {
-        ...post,
-        comments: [...post.comments, { id: Date.now(), text: newComment, date: new Date().toISOString() }]
-      };
-      setPost(updatedPost);
-      blogPosts[id] = updatedPost;
-      setNewComment('');
-      toast.success("Comment added successfully!");
+      setIsSubmitting(true);
+      try {
+        // Simulating an API call with a timeout
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const updatedPost = {
+          ...post,
+          comments: [...(post.comments || []), { id: Date.now(), text: newComment, date: new Date().toISOString() }]
+        };
+        setPost(updatedPost);
+        blogPosts[id] = updatedPost;
+        setNewComment('');
+        toast.success("Comment added successfully!");
+      } catch (error) {
+        console.error("Error posting comment:", error);
+        toast.error("Failed to post comment. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -84,10 +96,23 @@ const BlogPost = () => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."
             className="mb-2"
+            disabled={isSubmitting}
           />
-          <Button type="submit" className="flex items-center">
-            <Send className="mr-2 h-4 w-4" />
-            Post Comment
+          <Button type="submit" className="flex items-center" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <span className="mr-2">Posting...</span>
+                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </>
+            ) : (
+              <>
+                <Send className="mr-2 h-4 w-4" />
+                Post Comment
+              </>
+            )}
           </Button>
         </form>
         {post.comments && post.comments.length > 0 ? (
