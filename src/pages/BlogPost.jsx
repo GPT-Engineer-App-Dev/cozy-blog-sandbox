@@ -1,7 +1,9 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const blogPosts = {
   1: {
@@ -23,11 +25,19 @@ const blogPosts = {
 
 const BlogPost = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const post = blogPosts[id];
 
   if (!post) {
     return <div className="container mx-auto px-4 py-8">Post not found</div>;
   }
+
+  const handleDelete = () => {
+    // In a real application, you would make an API call to delete the post
+    delete blogPosts[id];
+    toast.success("Post deleted successfully!");
+    navigate('/');
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -36,7 +46,13 @@ const BlogPost = () => {
           <ArrowLeft className="mr-2" size={20} />
           Back to Home
         </Link>
-        <ThemeSwitcher />
+        <div className="flex items-center space-x-4">
+          <Button variant="destructive" onClick={handleDelete}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete Post
+          </Button>
+          <ThemeSwitcher />
+        </div>
       </div>
       <article className="prose lg:prose-xl mx-auto">
         <h1>{post.title}</h1>
