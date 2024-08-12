@@ -21,16 +21,12 @@ const HomePage = () => {
     toast.success("Post deleted successfully!");
   };
 
-  // Add this function to ensure the delete button is visible
-  const renderDeleteButton = (id) => (
-    <DeleteConfirmation id={id} />
-  );
-
   const DeleteConfirmation = ({ id }) => (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="sm">
-          <Trash2 className="h-4 w-4" />
+        <Button variant="destructive" size="sm" className="bg-red-500 hover:bg-red-600 text-white">
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -47,6 +43,7 @@ const HomePage = () => {
       </AlertDialogContent>
     </AlertDialog>
   );
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -73,8 +70,10 @@ const HomePage = () => {
             <CardFooter className="flex justify-between items-center">
               <span className="text-sm text-gray-500">{post.date}</span>
               <div className="flex space-x-2">
-                <Link to={`/post/${post.id}`} className="text-blue-500 hover:underline">Read more</Link>
-                {renderDeleteButton(post.id)}
+                <Link to={`/post/${post.id}`}>
+                  <Button variant="outline" size="sm">Read more</Button>
+                </Link>
+                <DeleteConfirmation id={post.id} />
               </div>
             </CardFooter>
           </Card>
