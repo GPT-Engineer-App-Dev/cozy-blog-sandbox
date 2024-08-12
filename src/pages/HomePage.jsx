@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import { PenTool, Trash2 } from 'lucide-react';
 import { toast } from "sonner";
@@ -19,6 +20,28 @@ const HomePage = () => {
     setBlogPosts(blogPosts.filter(post => post.id !== id));
     toast.success("Post deleted successfully!");
   };
+
+  const DeleteConfirmation = ({ id }) => (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" size="sm">
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the blog post.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => handleDelete(id)}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -46,9 +69,7 @@ const HomePage = () => {
               <span className="text-sm text-gray-500">{post.date}</span>
               <div className="flex space-x-2">
                 <Link to={`/post/${post.id}`} className="text-blue-500 hover:underline">Read more</Link>
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(post.id)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <DeleteConfirmation id={post.id} />
               </div>
             </CardFooter>
           </Card>
