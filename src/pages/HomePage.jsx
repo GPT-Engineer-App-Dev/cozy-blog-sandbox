@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import { PenTool } from 'lucide-react';
 
 const blogPosts = [
   { id: 1, title: "My First Blog Post", excerpt: "This is the beginning of my blogging journey...", date: "2023-04-01" },
@@ -14,7 +16,15 @@ const HomePage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold">My Personal Blog</h1>
-        <ThemeSwitcher />
+        <div className="flex items-center space-x-4">
+          <Link to="/new">
+            <Button className="flex items-center">
+              <PenTool className="mr-2 h-4 w-4" />
+              New Post
+            </Button>
+          </Link>
+          <ThemeSwitcher />
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogPosts.map((post) => (
