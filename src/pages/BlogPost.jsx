@@ -90,17 +90,17 @@ const BlogPost = () => {
             Post Comment
           </Button>
         </form>
-        {post.comments.length > 0 ? (
+        {post.comments && post.comments.length > 0 ? (
           post.comments.map((comment) => (
             <div key={comment.id} className="bg-secondary p-4 rounded-lg mb-4">
-              <p>{comment.text}</p>
-              <p className="text-sm text-gray-500 mt-2">
-                {new Date(comment.date).toLocaleString()}
+              <p className="mb-2">{comment.text}</p>
+              <p className="text-sm text-gray-500">
+                Posted on {new Date(comment.date).toLocaleString()}
               </p>
             </div>
           ))
         ) : (
-          <p>No comments yet. Be the first to comment!</p>
+          <p className="text-gray-500 italic">No comments yet. Be the first to comment!</p>
         )}
       </div>
     </div>
