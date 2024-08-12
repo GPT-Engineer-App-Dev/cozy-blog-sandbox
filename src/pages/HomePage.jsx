@@ -21,6 +21,11 @@ const HomePage = () => {
     toast.success("Post deleted successfully!");
   };
 
+  // Add this function to ensure the delete button is visible
+  const renderDeleteButton = (id) => (
+    <DeleteConfirmation id={id} />
+  );
+
   const DeleteConfirmation = ({ id }) => (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -69,7 +74,7 @@ const HomePage = () => {
               <span className="text-sm text-gray-500">{post.date}</span>
               <div className="flex space-x-2">
                 <Link to={`/post/${post.id}`} className="text-blue-500 hover:underline">Read more</Link>
-                <DeleteConfirmation id={post.id} />
+                {renderDeleteButton(post.id)}
               </div>
             </CardFooter>
           </Card>
